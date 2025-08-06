@@ -49,5 +49,4 @@ services:
 databases:
   - name: fmca-database
     databaseName: fmca_db
-    user: fmca_user
-    plan: standard 
+    user: fmca_user 
