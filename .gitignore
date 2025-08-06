@@ -110,6 +110,11 @@ Thumbs.db
 *.db
 *.sqlite
 *.sqlite3
+*.dump
+*.backup
+*_backup*
+*_dump*
+fmca_db_backup*
 
 # Flask session files
 flask_session/
