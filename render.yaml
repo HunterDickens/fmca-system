@@ -1,0 +1,48 @@
+services:
+  # Backend API Service
+  - type: web
+    name: fmca-backend
+    env: python
+    plan: starter
+    buildCommand: |
+      cd automcs150-backend
+      pip install -r requirements.txt
+      python -m flask db upgrade
+    startCommand: |
+      cd automcs150-backend
+      gunicorn app:app --bind 0.0.0.0:$PORT --workers 2
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: fmca-database
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: FLASK_ENV
+        value: production
+
+  # Frontend Web Service
+  - type: web
+    name: fmca-frontend
+    env: node
+    plan: starter
+    buildCommand: |
+      cd automcs150-frontend
+      npm install
+      npm run build
+    startCommand: |
+      cd automcs150-frontend
+      npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18.17.0
+      - key: NEXT_PUBLIC_API_URL
+        value: https://fmca-backend.onrender.com
+
+databases:
+  - name: fmca-database
+    databaseName: fmca_db
+    user: fmca_user
+    plan: starter 
