@@ -50,4 +50,4 @@ databases:
   - name: fmca-database
     databaseName: fmca_db
     user: fmca_user
-    plan: starter 
+    plan: standard 
