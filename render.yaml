@@ -8,9 +8,10 @@ services:
       cd automcs150-backend
       pip install -r requirements.txt
       python -m flask db upgrade
+      python load_custom_data.py
     startCommand: |
       cd automcs150-backend
-      gunicorn app:app --bind 0.0.0.0:$PORT --workers 2
+      gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --preload
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -22,6 +23,8 @@ services:
         generateValue: true
       - key: FLASK_ENV
         value: production
+      - key: FLASK_APP
+        value: app.py
 
   # Frontend Web Service
   - type: web
@@ -34,15 +37,17 @@ services:
       npm run build
     startCommand: |
       cd automcs150-frontend
-      npm start
+      npx next start -p $PORT
     envVars:
       - key: NODE_VERSION
         value: 18.17.0
       - key: NEXT_PUBLIC_API_URL
         value: https://fmca-backend.onrender.com
+      - key: PORT
+        value: 3000
 
 databases:
   - name: fmca-database
     databaseName: fmca_db
     user: fmca_user
-    plan: starter 
+    plan: free 
