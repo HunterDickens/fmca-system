@@ -9,7 +9,8 @@ services:
       pip install -r requirements.txt
     startCommand: |
       cd automcs150-backend
-      python -m flask db upgrade
+      export FLASK_APP=app.py
+      python -c "from app import app, db; app.app_context().push(); db.create_all()"
       python load_custom_data.py
       gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --preload
     envVars:
