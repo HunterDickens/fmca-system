@@ -1,0 +1,261 @@
+{
+  "users": [
+    {
+      "username": "admin",
+      "email": "admin@fmca.com",
+      "password": "admin123",
+      "first_name": "System",
+      "last_name": "Administrator",
+      "is_admin": true,
+      "company_name": "FMCA System",
+      "phone_number": "555-0001",
+      "address": "123 Admin St, Washington, DC 20001"
+    },
+    {
+      "username": "john_doe",
+      "email": "john.doe@truckingco.com",
+      "password": "password123",
+      "first_name": "John",
+      "last_name": "Doe",
+      "is_admin": false,
+      "company_name": "Doe Trucking Company",
+      "phone_number": "555-1234",
+      "address": "456 Trucking Ave, Dallas, TX 75201"
+    },
+    {
+      "username": "sarah_smith",
+      "email": "sarah.smith@freightlogistics.com",
+      "password": "password123",
+      "first_name": "Sarah",
+      "last_name": "Smith",
+      "is_admin": false,
+      "company_name": "Freight Logistics Inc",
+      "phone_number": "555-2345",
+      "address": "789 Logistics Blvd, Chicago, IL 60601"
+    },
+    {
+      "username": "mike_johnson",
+      "email": "mike.johnson@expresshauling.com",
+      "password": "password123",
+      "first_name": "Mike",
+      "last_name": "Johnson",
+      "is_admin": false,
+      "company_name": "Express Hauling Services",
+      "phone_number": "555-3456",
+      "address": "321 Express Way, Atlanta, GA 30301"
+    },
+    {
+      "username": "lisa_wilson",
+      "email": "lisa.wilson@cargotransport.com",
+      "password": "password123",
+      "first_name": "Lisa",
+      "last_name": "Wilson",
+      "is_admin": false,
+      "company_name": "Cargo Transport Solutions",
+      "phone_number": "555-4567",
+      "address": "654 Cargo Rd, Los Angeles, CA 90001"
+    },
+    {
+      "username": "david_brown",
+      "email": "david.brown@interstatetrucking.com",
+      "password": "password123",
+      "first_name": "David",
+      "last_name": "Brown",
+      "is_admin": false,
+      "company_name": "Interstate Trucking Co",
+      "phone_number": "555-5678",
+      "address": "987 Interstate Hwy, Phoenix, AZ 85001"
+    }
+  ],
+  "filings": [
+    {
+      "user_email": "john.doe@truckingco.com",
+      "filing_type": "MCS-150",
+      "status": "Completed",
+      "submission_date": "2024-01-15",
+      "completion_date": "2024-01-17",
+      "usdot_number": "1234567",
+      "carrier_name": "Doe Trucking Company",
+      "filing_data": {
+        "legal_name": "Doe Trucking Company LLC",
+        "dba": "Doe Trucking",
+        "physical_address": {
+          "street": "456 Trucking Avenue",
+          "city": "Dallas",
+          "state": "TX",
+          "zip": "75201"
+        },
+        "phone": "555-1234",
+        "ein": "12-3456789",
+        "number_of_trucks": 25,
+        "number_of_trailers": 30,
+        "operation_classification": "Interstate",
+        "cargo_carried": "General Freight"
+      }
+    },
+    {
+      "user_email": "sarah.smith@freightlogistics.com",
+      "filing_type": "MCS-150",
+      "status": "In Progress",
+      "submission_date": "2024-02-01",
+      "usdot_number": "2345678",
+      "carrier_name": "Freight Logistics Inc",
+      "filing_data": {
+        "legal_name": "Freight Logistics Inc",
+        "dba": "FreightLog",
+        "physical_address": {
+          "street": "789 Logistics Boulevard",
+          "city": "Chicago",
+          "state": "IL",
+          "zip": "60601"
+        },
+        "phone": "555-2345",
+        "ein": "23-4567890",
+        "number_of_trucks": 50,
+        "number_of_trailers": 60,
+        "operation_classification": "Interstate",
+        "cargo_carried": "Hazardous Materials"
+      }
+    },
+    {
+      "user_email": "mike.johnson@expresshauling.com",
+      "filing_type": "MCS-150",
+      "status": "Completed",
+      "submission_date": "2023-12-10",
+      "completion_date": "2023-12-12",
+      "usdot_number": "3456789",
+      "carrier_name": "Express Hauling Services",
+      "filing_data": {
+        "legal_name": "Express Hauling Services LLC",
+        "dba": "Express Haul",
+        "physical_address": {
+          "street": "321 Express Way",
+          "city": "Atlanta",
+          "state": "GA",
+          "zip": "30301"
+        },
+        "phone": "555-3456",
+        "ein": "34-5678901",
+        "number_of_trucks": 15,
+        "number_of_trailers": 20,
+        "operation_classification": "Interstate",
+        "cargo_carried": "Refrigerated Food"
+      }
+    },
+    {
+      "user_email": "lisa.wilson@cargotransport.com",
+      "filing_type": "MCS-150",
+      "status": "Pending Review",
+      "submission_date": "2024-02-15",
+      "usdot_number": "4567890",
+      "carrier_name": "Cargo Transport Solutions",
+      "filing_data": {
+        "legal_name": "Cargo Transport Solutions Inc",
+        "dba": "CargoTrans",
+        "physical_address": {
+          "street": "654 Cargo Road",
+          "city": "Los Angeles",
+          "state": "CA",
+          "zip": "90001"
+        },
+        "phone": "555-4567",
+        "ein": "45-6789012",
+        "number_of_trucks": 35,
+        "number_of_trailers": 40,
+        "operation_classification": "Interstate",
+        "cargo_carried": "Machinery"
+      }
+    },
+    {
+      "user_email": "david.brown@interstatetrucking.com",
+      "filing_type": "MCS-150",
+      "status": "Completed",
+      "submission_date": "2024-01-20",
+      "completion_date": "2024-01-22",
+      "usdot_number": "5678901",
+      "carrier_name": "Interstate Trucking Co",
+      "filing_data": {
+        "legal_name": "Interstate Trucking Company",
+        "dba": "Interstate Truck",
+        "physical_address": {
+          "street": "987 Interstate Highway",
+          "city": "Phoenix",
+          "state": "AZ",
+          "zip": "85001"
+        },
+        "phone": "555-5678",
+        "ein": "56-7890123",
+        "number_of_trucks": 40,
+        "number_of_trailers": 45,
+        "operation_classification": "Interstate",
+        "cargo_carried": "Construction Materials"
+      }
+    },
+    {
+      "user_email": "john.doe@truckingco.com",
+      "filing_type": "MCS-150",
+      "status": "Draft",
+      "submission_date": "2024-02-20",
+      "usdot_number": "1234567",
+      "carrier_name": "Doe Trucking Company",
+      "filing_data": {
+        "legal_name": "Doe Trucking Company LLC",
+        "dba": "Doe Trucking",
+        "physical_address": {
+          "street": "456 Trucking Avenue",
+          "city": "Dallas",
+          "state": "TX",
+          "zip": "75201"
+        },
+        "phone": "555-1234",
+        "ein": "12-3456789",
+        "number_of_trucks": 30,
+        "number_of_trailers": 35,
+        "operation_classification": "Interstate",
+        "cargo_carried": "General Freight"
+      }
+    }
+  ],
+  "notifications": [
+    {
+      "user_email": "john.doe@truckingco.com",
+      "title": "MCS-150 Filing Completed",
+      "message": "Your MCS-150 filing for USDOT 1234567 has been successfully completed and approved.",
+      "type": "success",
+      "is_read": false,
+      "created_at": "2024-01-17T10:30:00"
+    },
+    {
+      "user_email": "sarah.smith@freightlogistics.com",
+      "title": "MCS-150 Filing Update",
+      "message": "Your MCS-150 filing is currently under review. You will be notified once the review is complete.",
+      "type": "info",
+      "is_read": false,
+      "created_at": "2024-02-01T14:15:00"
+    },
+    {
+      "user_email": "mike.johnson@expresshauling.com",
+      "title": "Annual Filing Reminder",
+      "message": "Your annual MCS-150 filing is due within 30 days. Please submit your updated information.",
+      "type": "warning",
+      "is_read": true,
+      "created_at": "2024-01-15T09:00:00"
+    },
+    {
+      "user_email": "lisa.wilson@cargotransport.com",
+      "title": "Documentation Required",
+      "message": "Additional documentation is required for your MCS-150 filing. Please check your filing details.",
+      "type": "warning",
+      "is_read": false,
+      "created_at": "2024-02-16T11:45:00"
+    },
+    {
+      "user_email": "david.brown@interstatetrucking.com",
+      "title": "Filing Approved",
+      "message": "Congratulations! Your MCS-150 filing has been approved and is now active.",
+      "type": "success",
+      "is_read": true,
+      "created_at": "2024-01-22T16:20:00"
+    }
+  ]
+} 

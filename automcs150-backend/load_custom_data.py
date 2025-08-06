@@ -22,160 +22,168 @@ def load_custom_data():
         
         print("Loading custom data...")
         
-        # Example: Load users from a CSV file
-        # Uncomment and modify the following code to load your data
+        # Load data from JSON file
+        try:
+            with open('mock_data.json', 'r') as file:
+                data = json.load(file)
+                
+                # Load users
+                for user_data in data.get('users', []):
+                    # Check if user already exists
+                    existing_user = User.query.filter_by(email=user_data['email']).first()
+                    if not existing_user:
+                        user = User(
+                            username=user_data['username'],
+                            email=user_data['email'],
+                            password_hash=bcrypt.generate_password_hash(user_data['password']).decode('utf-8'),
+                            first_name=user_data['first_name'],
+                            last_name=user_data['last_name'],
+                            is_admin=user_data.get('is_admin', False),
+                            company_name=user_data.get('company_name', ''),
+                            phone_number=user_data.get('phone_number', ''),
+                            address=user_data.get('address', '')
+                        )
+                        db.session.add(user)
+                        print(f"Added user: {user_data['email']}")
+                    else:
+                        print(f"User already exists: {user_data['email']}")
+                
+                # Commit users first to get their IDs
+                db.session.commit()
+                
+                # Load filing history
+                for filing_data in data.get('filings', []):
+                    user = User.query.filter_by(email=filing_data['user_email']).first()
+                    if user:
+                        # Check if filing already exists
+                        existing_filing = FilingHistory.query.filter_by(
+                            user_id=user.id,
+                            usdot_number=filing_data['usdot_number'],
+                            submission_date=datetime.strptime(filing_data['submission_date'], '%Y-%m-%d')
+                        ).first()
+                        
+                        if not existing_filing:
+                            filing = FilingHistory(
+                                user_id=user.id,
+                                filing_type=filing_data['filing_type'],
+                                status=filing_data['status'],
+                                submission_date=datetime.strptime(filing_data['submission_date'], '%Y-%m-%d'),
+                                completion_date=datetime.strptime(filing_data['completion_date'], '%Y-%m-%d') if filing_data.get('completion_date') else None,
+                                usdot_number=filing_data['usdot_number'],
+                                carrier_name=filing_data['carrier_name'],
+                                filing_data=json.dumps(filing_data.get('filing_data', {}))
+                            )
+                            db.session.add(filing)
+                            print(f"Added filing for: {filing_data['carrier_name']}")
+                        else:
+                            print(f"Filing already exists for: {filing_data['carrier_name']}")
+                
+                # Load notifications
+                for notification_data in data.get('notifications', []):
+                    user = User.query.filter_by(email=notification_data['user_email']).first()
+                    if user:
+                        # Check if notification already exists
+                        existing_notification = Notification.query.filter_by(
+                            user_id=user.id,
+                            title=notification_data['title'],
+                            message=notification_data['message']
+                        ).first()
+                        
+                        if not existing_notification:
+                            notification = Notification(
+                                user_id=user.id,
+                                title=notification_data['title'],
+                                message=notification_data['message'],
+                                type=notification_data['type'],
+                                is_read=notification_data.get('is_read', False),
+                                created_at=datetime.fromisoformat(notification_data['created_at'].replace('Z', '+00:00'))
+                            )
+                            db.session.add(notification)
+                            print(f"Added notification for: {notification_data['user_email']}")
+                        else:
+                            print(f"Notification already exists for: {notification_data['user_email']}")
+                
+                db.session.commit()
+                print("Custom data loaded successfully!")
+                
+        except FileNotFoundError:
+            print("mock_data.json not found. Loading default data...")
+            load_default_data()
+        except Exception as e:
+            print(f"Error loading data: {e}")
+            load_default_data()
+
+def load_default_data():
+    """Load default data if JSON file is not available"""
+    with app.app_context():
+        bcrypt = Bcrypt(app)
         
-        """
-        # Load users from CSV
-        with open('your_users.csv', 'r') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                user = User(
-                    username=row['username'],
-                    email=row['email'],
-                    password_hash=bcrypt.generate_password_hash(row['password']).decode('utf-8'),
-                    first_name=row['first_name'],
-                    last_name=row['last_name'],
-                    is_admin=row['is_admin'].lower() == 'true',
-                    company_name=row['company_name'],
-                    phone_number=row['phone_number'],
-                    address=row['address']
-                )
-                db.session.add(user)
+        # Add default admin user
+        admin_user = User.query.filter_by(email='admin@fmca.com').first()
+        if not admin_user:
+            admin_user = User(
+                username='admin',
+                email='admin@fmca.com',
+                password_hash=bcrypt.generate_password_hash('admin123').decode('utf-8'),
+                first_name='System',
+                last_name='Administrator',
+                is_admin=True,
+                company_name='FMCA System',
+                phone_number='555-0001',
+                address='123 Admin St, Washington, DC 20001'
+            )
+            db.session.add(admin_user)
+            print("Added default admin user")
         
-        # Load filing history from CSV
-        with open('your_filings.csv', 'r') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                filing = FilingHistory(
-                    user_id=row['user_id'],
-                    filing_type=row['filing_type'],
-                    status=row['status'],
-                    submission_date=datetime.strptime(row['submission_date'], '%Y-%m-%d'),
-                    usdot_number=row['usdot_number'],
-                    carrier_name=row['carrier_name'],
-                    filing_data=row['filing_data']
-                )
-                db.session.add(filing)
-        """
-        
-        # Example: Load data from JSON file
-        # Uncomment and modify the following code to load your JSON data
-        
-        """
-        with open('your_data.json', 'r') as file:
-            data = json.load(file)
-            
-            # Load users
-            for user_data in data.get('users', []):
-                user = User(
-                    username=user_data['username'],
-                    email=user_data['email'],
-                    password_hash=bcrypt.generate_password_hash(user_data['password']).decode('utf-8'),
-                    first_name=user_data['first_name'],
-                    last_name=user_data['last_name'],
-                    is_admin=user_data.get('is_admin', False),
-                    company_name=user_data.get('company_name', ''),
-                    phone_number=user_data.get('phone_number', ''),
-                    address=user_data.get('address', '')
-                )
-                db.session.add(user)
-            
-            # Load filing history
-            for filing_data in data.get('filings', []):
-                filing = FilingHistory(
-                    user_id=filing_data['user_id'],
-                    filing_type=filing_data['filing_type'],
-                    status=filing_data['status'],
-                    submission_date=datetime.strptime(filing_data['submission_date'], '%Y-%m-%d'),
-                    usdot_number=filing_data['usdot_number'],
-                    carrier_name=filing_data['carrier_name'],
-                    filing_data=json.dumps(filing_data.get('filing_data', {}))
-                )
-                db.session.add(filing)
-        """
-        
-        # Example: Load data directly in the script
-        # Modify this section to add your specific demo data
-        
-        # Add your custom users here
-        custom_users = [
-            {
-                'username': 'your_carrier1',
-                'email': 'carrier1@example.com',
-                'password': 'password123',
-                'first_name': 'John',
-                'last_name': 'Doe',
-                'is_admin': False,
-                'company_name': 'Your Carrier Company',
-                'phone_number': '555-1234',
-                'address': '123 Main St, City, State 12345'
-            }
-            # Add more users as needed
-        ]
-        
-        for user_data in custom_users:
-            # Check if user already exists
-            existing_user = User.query.filter_by(email=user_data['email']).first()
-            if not existing_user:
-                user = User(
-                    username=user_data['username'],
-                    email=user_data['email'],
-                    password_hash=bcrypt.generate_password_hash(user_data['password']).decode('utf-8'),
-                    first_name=user_data['first_name'],
-                    last_name=user_data['last_name'],
-                    is_admin=user_data['is_admin'],
-                    company_name=user_data['company_name'],
-                    phone_number=user_data['phone_number'],
-                    address=user_data['address']
-                )
-                db.session.add(user)
-                print(f"Added user: {user_data['email']}")
-        
-        # Add your custom filing history here
-        custom_filings = [
-            {
-                'user_email': 'carrier1@example.com',
-                'filing_type': 'MCS-150',
-                'status': 'Completed',
-                'submission_date': datetime.now() - timedelta(days=60),
-                'completion_date': datetime.now() - timedelta(days=58),
-                'usdot_number': '1234567',
-                'carrier_name': 'Your Carrier Company',
-                'filing_data': {
-                    'legal_name': 'Your Carrier Company',
-                    'dba': 'Your Carrier',
-                    'physical_address': {
-                        'street': '123 Main St',
-                        'city': 'City',
-                        'state': 'ST',
-                        'zip': '12345'
-                    },
-                    'phone': '555-1234',
-                    'ein': '12-3456789'
-                }
-            }
-            # Add more filings as needed
-        ]
-        
-        for filing_data in custom_filings:
-            user = User.query.filter_by(email=filing_data['user_email']).first()
-            if user:
-                filing = FilingHistory(
-                    user_id=user.id,
-                    filing_type=filing_data['filing_type'],
-                    status=filing_data['status'],
-                    submission_date=filing_data['submission_date'],
-                    completion_date=filing_data.get('completion_date'),
-                    usdot_number=filing_data['usdot_number'],
-                    carrier_name=filing_data['carrier_name'],
-                    filing_data=json.dumps(filing_data['filing_data'])
-                )
-                db.session.add(filing)
-                print(f"Added filing for: {filing_data['carrier_name']}")
+        # Add default carrier user
+        carrier_user = User.query.filter_by(email='carrier@example.com').first()
+        if not carrier_user:
+            carrier_user = User(
+                username='carrier',
+                email='carrier@example.com',
+                password_hash=bcrypt.generate_password_hash('password123').decode('utf-8'),
+                first_name='John',
+                last_name='Doe',
+                is_admin=False,
+                company_name='Example Trucking Company',
+                phone_number='555-1234',
+                address='456 Trucking Ave, Dallas, TX 75201'
+            )
+            db.session.add(carrier_user)
+            print("Added default carrier user")
         
         db.session.commit()
-        print("Custom data loaded successfully!")
+        
+        # Add sample filing for carrier user
+        if carrier_user:
+            sample_filing = FilingHistory.query.filter_by(user_id=carrier_user.id).first()
+            if not sample_filing:
+                filing = FilingHistory(
+                    user_id=carrier_user.id,
+                    filing_type='MCS-150',
+                    status='Completed',
+                    submission_date=datetime.now() - timedelta(days=30),
+                    completion_date=datetime.now() - timedelta(days=28),
+                    usdot_number='1234567',
+                    carrier_name='Example Trucking Company',
+                    filing_data=json.dumps({
+                        'legal_name': 'Example Trucking Company LLC',
+                        'dba': 'Example Trucking',
+                        'physical_address': {
+                            'street': '456 Trucking Avenue',
+                            'city': 'Dallas',
+                            'state': 'TX',
+                            'zip': '75201'
+                        },
+                        'phone': '555-1234',
+                        'ein': '12-3456789'
+                    })
+                )
+                db.session.add(filing)
+                print("Added sample filing")
+        
+        db.session.commit()
+        print("Default data loaded successfully!")
 
 if __name__ == "__main__":
     load_custom_data() 

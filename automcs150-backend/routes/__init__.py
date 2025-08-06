@@ -5,6 +5,7 @@ from routes.auth import auth
 from routes.user import user
 from routes.dashboard import dashboard
 from routes.notification import notification
+from routes.health import health
 
 
 def register_routes(app):
@@ -14,3 +15,4 @@ def register_routes(app):
     app.register_blueprint(user)
     app.register_blueprint(dashboard)
     app.register_blueprint(notification)
+    app.register_blueprint(health)

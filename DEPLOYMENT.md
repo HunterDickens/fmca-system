@@ -1,134 +1,173 @@
-# FMCA Application Deployment Guide
+# FMCA System Deployment Guide
 
-This guide will help you deploy the FMCA application to Render using your `fmca-2` repository.
+This guide will help you deploy the FMCA (Federal Motor Carrier Administration) system to Render.
 
 ## Prerequisites
 
-1. A GitHub account with your `fmca-2` repository
-2. A Render account (free tier available)
-3. Your database file with demo data
+1. A Render account (free tier available)
+2. Git repository with your code
+3. Basic understanding of web applications
 
 ## Deployment Steps
 
 ### 1. Prepare Your Repository
 
-Make sure your `fmca-2` repository contains all the files from this project, including:
-- `render.yaml` (deployment configuration)
-- `automcs150-backend/` (Flask backend)
-- `automcs150-frontend/` (Next.js frontend)
-- All configuration files
+Make sure your repository contains:
+- `render.yaml` - Render configuration file
+- `automcs150-backend/` - Python Flask backend
+- `automcs150-frontend/` - Next.js frontend
+- All necessary configuration files
 
-### 2. Deploy to Render
+### 2. Connect to Render
 
-1. **Sign up/Login to Render**: Go to [render.com](https://render.com) and create an account or login
+1. Go to [render.com](https://render.com) and sign up/login
+2. Click "New +" and select "Blueprint"
+3. Connect your GitHub/GitLab repository
+4. Render will automatically detect the `render.yaml` file
 
-2. **Connect Your Repository**:
-   - Click "New +" and select "Blueprint"
-   - Connect your GitHub account
-   - Select your `fmca-2` repository
-   - Render will automatically detect the `render.yaml` file
+### 3. Configure Environment Variables
 
-3. **Configure Deployment**:
-   - Render will create 3 services:
-     - `fmca-backend` (Python Flask API)
-     - `fmca-frontend` (Next.js frontend)
-     - `fmca-database` (PostgreSQL database)
-   - Click "Apply" to start the deployment
+The following environment variables will be automatically set by Render:
 
-4. **Wait for Deployment**:
-   - Backend deployment: ~5-10 minutes
-   - Frontend deployment: ~3-5 minutes
-   - Database creation: ~2-3 minutes
+**Backend Service:**
+- `DATABASE_URL` - Automatically set from the database service
+- `JWT_SECRET_KEY` - Automatically generated
+- `FLASK_ENV` - Set to "production"
+- `FLASK_APP` - Set to "app.py"
 
-### 3. Load Demo Data
+**Frontend Service:**
+- `NEXT_PUBLIC_API_URL` - Set to the backend service URL
+- `PORT` - Set to 3000
 
-After deployment, you can load demo data using the initialization script:
+### 4. Deploy
 
-1. **Access the Backend Console**:
-   - Go to your `fmca-backend` service in Render
-   - Click on "Shell" tab
-   - Run the following commands:
+1. Click "Apply" to start the deployment
+2. Render will:
+   - Create a PostgreSQL database
+   - Deploy the backend service
+   - Deploy the frontend service
+   - Run database migrations
+   - Load mock data
 
-```bash
-cd automcs150-backend
-python init_db.py
-```
-
-This will create:
-- Admin user: `admin@fmca.com` / `admin123`
-- Demo carrier: `demo@carrier.com` / `demo123`
-- Sample filing history and notifications
-
-### 4. Access Your Application
+### 5. Access Your Application
 
 Once deployment is complete, you'll have:
 - **Frontend**: `https://fmca-frontend.onrender.com`
 - **Backend API**: `https://fmca-backend.onrender.com`
-- **Database**: Managed by Render
+- **Database**: Managed PostgreSQL instance
 
-## Environment Variables
+## Default Login Credentials
 
-The following environment variables are automatically configured:
+### Admin User
+- **Email**: `admin@fmca.com`
+- **Password**: `admin123`
 
-### Backend (`fmca-backend`)
-- `DATABASE_URL`: Automatically set by Render
-- `JWT_SECRET_KEY`: Automatically generated
-- `FLASK_ENV`: Set to "production"
+### Sample Carrier Users
+- **Email**: `john.doe@truckingco.com`
+- **Password**: `password123`
 
-### Frontend (`fmca-frontend`)
-- `NEXT_PUBLIC_API_URL`: Points to your backend URL
+- **Email**: `sarah.smith@freightlogistics.com`
+- **Password**: `password123`
 
-## Custom Database Data
+- **Email**: `mike.johnson@expresshauling.com`
+- **Password**: `password123`
 
-If you have a specific database file with demo data:
+- **Email**: `lisa.wilson@cargotransport.com`
+- **Password**: `password123`
 
-1. **Export your data** as SQL or CSV format
-2. **Access the database** through Render's database dashboard
-3. **Import your data** using the database console or connection tools
+- **Email**: `david.brown@interstatetrucking.com`
+- **Password**: `password123`
+
+## Mock Data Included
+
+The deployment includes comprehensive mock data:
+
+### Users
+- 1 Admin user
+- 5 Carrier users with different company profiles
+
+### Filing History
+- 6 MCS-150 filings with various statuses:
+  - Completed filings
+  - In Progress filings
+  - Pending Review filings
+  - Draft filings
+
+### Notifications
+- Various notification types (success, info, warning)
+- Different read/unread states
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Build Failures**:
+1. **Build Failures**
    - Check the build logs in Render dashboard
-   - Ensure all dependencies are in `requirements.txt` and `package.json`
+   - Ensure all dependencies are in requirements.txt
+   - Verify Python/Node.js versions
 
-2. **Database Connection Issues**:
-   - Verify the `DATABASE_URL` is correctly formatted
-   - Check if the database service is running
+2. **Database Connection Issues**
+   - Verify DATABASE_URL is correctly set
+   - Check if database service is running
+   - Ensure migrations completed successfully
 
-3. **Frontend API Calls**:
-   - Ensure `NEXT_PUBLIC_API_URL` is set correctly
-   - Check CORS settings in the backend
+3. **Frontend Not Loading**
+   - Check if backend API is accessible
+   - Verify NEXT_PUBLIC_API_URL is correct
+   - Check browser console for errors
 
 ### Logs and Monitoring
 
-- **Backend logs**: Available in the `fmca-backend` service dashboard
-- **Frontend logs**: Available in the `fmca-frontend` service dashboard
-- **Database logs**: Available in the `fmca-database` service dashboard
+- View logs in the Render dashboard for each service
+- Monitor database performance
+- Check application health endpoints
 
-## Cost Information
+## Customization
 
-- **Free Tier**: Includes 750 hours/month for web services
+### Adding More Mock Data
+
+1. Edit `automcs150-backend/mock_data.json`
+2. Add new users, filings, or notifications
+3. Redeploy the backend service
+
+### Environment Variables
+
+You can add custom environment variables in the Render dashboard:
+1. Go to your service settings
+2. Navigate to "Environment"
+3. Add key-value pairs
+
+### Database Management
+
+- Access database through Render dashboard
+- Use pgAdmin or similar tool for database management
+- Backup data regularly
+
+## Cost Considerations
+
+- **Free Tier**: Limited to 750 hours/month per service
+- **Paid Plans**: Start at $7/month per service
 - **Database**: Free tier includes 1GB storage
-- **Bandwidth**: Free tier includes 100GB/month
+
+## Security Notes
+
+- Change default passwords after deployment
+- Use strong JWT secrets in production
+- Enable HTTPS (automatic on Render)
+- Regular security updates
 
 ## Support
 
-If you encounter issues:
-1. Check the Render documentation
-2. Review the service logs
+For deployment issues:
+1. Check Render documentation
+2. Review application logs
 3. Contact Render support if needed
 
-## Demo Credentials
+## Next Steps
 
-After running the initialization script, you can login with:
-
-- **Admin Account**:
-  - Email: `admin@fmca.com`
-  - Password: `admin123`
-
-- **Demo Carrier Account**:
-  - Email: `demo@carrier.com`
-  - Password: `demo123` 
+After successful deployment:
+1. Test all functionality
+2. Update DNS if using custom domain
+3. Set up monitoring and alerts
+4. Configure backups
+5. Plan for scaling 
